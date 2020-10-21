@@ -1,6 +1,9 @@
 var express = require('express')
+const { TensorflowPredictor } = require('../ai/ai')
 var router = express.Router()
 
+var predictor = new TensorflowPredictor()
+predictor.loadModel()
 /**
  * @swagger
  *
@@ -10,7 +13,7 @@ var router = express.Router()
  *     produces:
  *       - application/json
  *     parameters:
- *       - name: input
+ *       - name: file
  *         description: The input picture
  *         in: formData
  *         required: true
@@ -24,8 +27,10 @@ router.post('/compute', function (req, res, next) {
   if (!req.is('multipart/form-data')) {
     res.send(400)
   } else {
-    res.json({
-      prediction: 'A'
+    predictor.predict(req.files.file.data).then(pred => {
+      res.json({
+        prediction: pred
+      })
     })
   }
 })
