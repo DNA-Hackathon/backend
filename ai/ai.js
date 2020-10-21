@@ -13,7 +13,7 @@ class TensorflowPredictor {
 
   async loadModel () {
     this.model = await tf.loadLayersModel(
-      'http://localhost:3000/model/model.json'
+      'https://dna-hackathon-backend.herokuapp.com//model/model.json'
     )
   }
 
