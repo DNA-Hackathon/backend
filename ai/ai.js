@@ -12,8 +12,9 @@ class TensorflowPredictor {
   constructor () {}
 
   async loadModel () {
+    const PORT = process.env.PORT || 3000;
     this.model = await tf.loadLayersModel(
-      'https://dna-hackathon-backend.herokuapp.com//model/model.json'
+      'http://localhost:'+PORT+'/model/model.json'
     )
   }
 
