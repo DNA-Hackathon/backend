@@ -23,8 +23,8 @@ class TensorflowPredictor {
       .resize(28, 28)
       .greyscale()
       .toBuffer()
-    let extractedPixels = await pixels(newImage, { type: 'png' })
 
+    const extractedPixels = await pixels(newImage, { type: 'png' })
     const imageAsTensor = tf.browser.fromPixels(extractedPixels, 1)
     const intTensor = tf.cast(imageAsTensor, 'int32')
     const normalization = tf.scalar(255)
@@ -32,19 +32,22 @@ class TensorflowPredictor {
     const prediction = this.model.predict(input.reshape([1, 28, 28, 1]))
     const predLabel = prediction.argMax(1).dataSync()[0]
     const cpred = correct_prediction(predLabel)
-    const newLocal = predToLabel(cpred)
-    return newLocal
+    return predToLabel(cpred)
   }
 }
 
 exports.TensorflowPredictor = TensorflowPredictor
 
 const correct_prediction = pred => {
-  if (pred >= 0) return pred + 1
+  if (pred >= 9) {
+    return pred + 1
+  }
   return pred
 }
 
 const predToLabel = pred => {
-  if (pred != 25) return String.fromCharCode(64 + pred)
+  if (pred != 25) {
+    return String.fromCharCode(65 + pred)
+  }
   return 'OTHER'
 }
