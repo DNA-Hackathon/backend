@@ -7,7 +7,8 @@ var logger = require('morgan')
 const swaggerDefinition = {
   basePath: '/'
 };
- 
+
+
 const options = {
   swaggerDefinition,
   apis: ['./routes/*.js'], // <-- not in the definition, but in the options
@@ -27,6 +28,10 @@ var app = express()
 app.use(fileUpload({
   limits: { fileSize: 50 * 1024 * 1024 },
 }));
+app.use(function (err, req, res, next) {
+  console.error(err.stack)
+  res.status(500).json({}) // <== YOUR JSON DATA HERE
+})
 app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -35,17 +40,5 @@ app.use(express.static(path.join(__dirname, 'ai')))
 
 app.use('/', computeRouter)
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
-// error handler
-app.use(function (err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message
-  res.locals.error = req.app.get('env') === 'development' ? err : {}
-
-  // render the error page
-  res.status(err.status || 500)
-  res.render('error')
-})
-
 
 module.exports = app
