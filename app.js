@@ -21,10 +21,14 @@ const swaggerSpec = swaggerJSDoc(options);
 var computeRouter = require('./routes/compute')
 const fileUpload = require('express-fileupload')
 
+var cors = require('cors');
+const bodyParser = require('body-parser');
+
 var app = express()
 
 
 // view engine setup
+app.use(cors())
 app.use(fileUpload({
   limits: { fileSize: 50 * 1024 * 1024 },
 }));
@@ -33,7 +37,7 @@ app.use(function (err, req, res, next) {
   res.status(500).json({}) // <== YOUR JSON DATA HERE
 })
 app.use(logger('dev'))
-app.use(express.json())
+app.use(bodyParser.json({ limit: "50mb" }))
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'ai')))

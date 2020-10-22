@@ -77,12 +77,22 @@ router.post('/game/compute', function (req, res, next) {
     res.send(400)
   } else {
     const bbox = req.body.bbox
-    const image = Buffer.from(req.body.image, 'base64')
-    console.log(image)
+    const image = Buffer.from(req.body.image.split(',')[1], 'base64')
+    fs = require('fs')
+
+    fs.writeFile('/tmp/imageo.png', image, function (err) {
+        if (err) return console.log(err)
+        console.log('written image to /tmp/image.png')
+      })
+    console.log(bbox)
     const croppedImage = sharp(image)
-      .extract({ left: bbox[0], top: bbox[1], width: bbox[2], height: bbox[3] })
+      .extract({ top: Math.floor(bbox[0]), left: Math.floor(bbox[1]), width: Math.floor(bbox[2]), height: Math.floor(bbox[3]) })
       .toBuffer()
       .then(image => {
+        fs.writeFile('/tmp/image.png', image, function (err) {
+          if (err) return console.log(err)
+          console.log('written image to /tmp/image.png')
+        })
         predictor.predict(image).then(pred => {
           res.json({
             prediction: pred
