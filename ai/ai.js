@@ -24,8 +24,12 @@ class TensorflowPredictor {
       .greyscale()
       .toBuffer()
     let extractedPixels = await pixels(newImage, { type: 'png' })
+
     const imageAsTensor = tf.browser.fromPixels(extractedPixels, 1)
-    const prediction = this.model.predict(imageAsTensor.reshape([1, 28, 28, 1]))
+    const intTensor = tf.cast(imageAsTensor, 'int32')
+    const normalization = tf.scalar(255)
+    const input = intTensor.div(normalization)
+    const prediction = this.model.predict(input.reshape([1, 28, 28, 1]))
     const predLabel = prediction.argMax(1).dataSync()[0]
     const cpred = correct_prediction(predLabel)
     const newLocal = predToLabel(cpred)
