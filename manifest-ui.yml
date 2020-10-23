@@ -1,0 +1,9 @@
+---
+applications:
+  - name: team4-ui-backend
+    memory: 1024M
+    instance: 1
+    timeout: 20
+    routes:
+      - route: team4-ui-backend.scapp-corp.swisscom.com
+      - route: team4-ui-backend.scapp.swisscom.com

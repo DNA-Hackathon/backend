@@ -31,8 +31,9 @@ class TensorflowPredictor {
     const input = intTensor.div(normalization)
     const prediction = this.model.predict(input.reshape([1, 28, 28, 1]))
     const predLabel = prediction.argMax(1).dataSync()[0]
+    const confidence = prediction.dataSync()[predLabel]
     const cpred = correct_prediction(predLabel)
-    return predToLabel(cpred)
+    return { prediction: predToLabel(cpred), confidence: confidence }
   }
 }
 

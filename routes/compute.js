@@ -30,9 +30,7 @@ router.post('/compute', function (req, res, next) {
     res.send(400)
   } else {
     predictor.predict(req.files.file.data).then(pred => {
-      res.json({
-        prediction: pred
-      })
+      res.json(pred)
     })
   }
 })
@@ -94,9 +92,7 @@ router.post('/game/compute', function (req, res, next) {
           console.log('written image to /tmp/image.png')
         })
         predictor.predict(image).then(pred => {
-          res.json({
-            prediction: pred
-          })
+          res.json(pred)
         })
       })
   }
